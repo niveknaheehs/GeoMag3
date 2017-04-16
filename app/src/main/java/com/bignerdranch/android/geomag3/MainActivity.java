@@ -25,6 +25,7 @@ import com.indooratlas.android.sdk.IALocationManager;
 import com.indooratlas.android.sdk.IALocationRequest;
 import com.indooratlas.android.sdk.resources.IALocationListenerSupport;
 
+import com.bignerdranch.android.geomag3.GeoFence;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,13 +39,19 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_ACCESS_WIFI_STATE = 104;
     private static final int REQUEST_CODE_CHANGE_WIFI_STATE = 105;
     private static final int REQUEST_CODE_ACCESS_LOCATION_EXTRA_COMMANDS = 106;
-    private static final int GEOFENCE_DIST = 50;
+
     private static double lastDistance;
     private static final  double POILatitude = 51.5225261374409;
     private static final double  POILongditude = -0.13083979995587666;
+
     private IALocationManager mIALocationManager;
     private String status = "unknown";
     private String quality = "unknown";
+    private static int TRUE = 1;
+    private static int FALSE = 0;
+    private int currentlyinsideGeoFence;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +83,10 @@ public class MainActivity extends AppCompatActivity {
                 android.Manifest.permission.ACCESS_LOCATION_EXTRA_COMMANDS,
                 android.Manifest.permission.BLUETOOTH,
                 android.Manifest.permission.BLUETOOTH_ADMIN,
-                android.Manifest.permission.INTERNET
+                android.Manifest.permission.INTERNET,
+                android.Manifest.permission.ACCESS_NETWORK_STATE,
+                android.Manifest.permission.INSTALL_LOCATION_PROVIDER,
+                android.Manifest.permission.CONTROL_LOCATION_UPDATES
         };
 
         ActivityCompat.requestPermissions( this, neededPermissions, CODE_PERMISSIONS );
@@ -101,17 +111,19 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0; i< grantResults.length; i++){
             if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
 
-                Toast.makeText(MainActivity.this, permissions[i].toString() +  " succeeded", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, permissions[i] +  " succeeded", Toast.LENGTH_LONG).show();
 
             } else {
 
-                Toast.makeText(MainActivity.this, permissions[i].toString() +  " denied", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, permissions[i] +  " denied", Toast.LENGTH_LONG).show();
             }
         }
 
     }
 
     private IALocationListener mIALocationListener = new IALocationListener() {
+
+
 
         // Called when the location has changed.
         @Override
@@ -134,26 +146,18 @@ public class MainActivity extends AppCompatActivity {
             String mStringLat = "Latitude: " + String.valueOf(location.getLatitude());
             mTextViewLat.setText(mStringLat);
 
-            Location poi = new Location("myProvider");
-            poi.setLongitude(POILongditude);
-            poi.setLatitude(POILatitude);
 
+           GeoFence geoFence = new GeoFence();
 
-            double distance = location.toLocation().distanceTo(poi);
+            geoFence.setLocation(location.getLongitude(),location.getLatitude());
 
-            if (lastDistance < GEOFENCE_DIST && distance > GEOFENCE_DIST) {
-                Toast.makeText(MainActivity.this, "Leaving point of interest", Toast.LENGTH_LONG).show();
-            }
-            else if (lastDistance > GEOFENCE_DIST && distance < GEOFENCE_DIST) {
+            if (geoFence.insideGeoFence(location.toLocation()) == TRUE && currentlyinsideGeoFence == FALSE) {
                 Toast.makeText(MainActivity.this, "Entering point of interest", Toast.LENGTH_LONG).show();
             }
-
-            lastDistance = distance;
-
-            TextView mTextViewDist = (TextView) findViewById(R.id.Dist_label);//"@+id/longLab");
-            String mStringDist = "Distance to POI: " + String.valueOf(distance);;
-            mTextViewDist.setText(mStringDist);
-
+            else if (geoFence.insideGeoFence(location.toLocation()) == FALSE && currentlyinsideGeoFence == TRUE) {
+                Toast.makeText(MainActivity.this, "Leaving point of interest", Toast.LENGTH_LONG).show();
+            }
+            currentlyinsideGeoFence = geoFence.insideGeoFence(location.toLocation());
         }
 
         @Override
