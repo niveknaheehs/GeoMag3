@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/Main_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="24dp"
+        android:text="Geomag Application"
+
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
+
+
+        <TextView
+            android:id="@+id/Cal_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="24dp"
+            android:text="Calibration"
+
+            />
+
+        <TextView
+            android:id="@+id/Stat_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="24dp"
+            android:text="Satus"
+
+            />
+
+        <TextView
+            android:id="@+id/Lat_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="24dp"
+            android:text="Latitude"
+
+            />
+
+        <TextView
+            android:id="@+id/Long_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="24dp"
+            android:text="Longditude"
+
+            />
+
+        <TextView
+            android:id="@+id/Dist_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="24dp"
+            android:text="Distance"
+
+            />
+
+
+
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:text="Map"
+        />
+
+
+</FrameLayout>

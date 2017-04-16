@@ -1,0 +1,58 @@
+{
+  "project_info": {
+    "project_number": "441263965350",
+    "firebase_url": "https://geomag-fa9c7.firebaseio.com",
+    "project_id": "geomag-fa9c7",
+    "storage_bucket": "geomag-fa9c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441263965350:android:870e0bfff3a649d5",
+        "android_client_info": {
+          "package_name": "com.bignerdranch.android.geomag3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "441263965350-e5tbbc33n9gv5onkhvch5g5pglb2v41p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bignerdranch.android.geomag3",
+            "certificate_hash": "c2f8969bfcdf6d08d078c970f4d45a19567cf824"
+          }
+        },
+        {
+          "client_id": "441263965350-542hhd0ru73i1404509fhc1r466edv9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD47uCg6JaRfff7uiQMQbHH0R_SmKpj_JY"
+        },
+        {
+          "current_key": "AIzaSyCemRScnIWKTgiRTwF61XfHI8u01tfQxRw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "441263965350-542hhd0ru73i1404509fhc1r466edv9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
