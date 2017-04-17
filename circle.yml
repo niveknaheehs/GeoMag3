@@ -26,7 +26,7 @@ test:
         - ./gradlew test
         - ./gradlew connectedAndroidTest
     pre:
-        - emulator -avd circleci-android24 -no-window:
+        - emulator -avd circleci-android22 -no-window:
           background: true
           parallel: true
         - circle-android wait-for-boot
