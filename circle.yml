@@ -27,7 +27,7 @@ test:
         - ./gradlew test
         - ./gradlew connectedAndroidTest
     pre:
-        - emulator -avd circleci-android22 -no-window:
+        - emulator -avd circleci-android24 -no-window:
           background: true
           parallel: true
         - circle-android wait-for-boot
@@ -35,4 +35,4 @@ test:
     post:
         - mkdir -p $CIRCLE_TEST_REPORTS/junit/
         - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-        - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+        - find . -type f -regex ".*/build/connectedAndroidTest-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
