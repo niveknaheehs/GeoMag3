@@ -13,11 +13,17 @@ test:
     override:
         - (./gradlew assemble -PdisablePreDex):
             timeout: 360
-        - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/app/build/outputs/apk/ $CIRCLE_ARTIFACTS
         - emulator -avd circleci-android22 -no-audio -no-window:
             background: true
             parallel: true
         # wait for it to have booted
         - circle-android wait-for-boot
+        # run unit tests  against the emulator.
+        - ./gradlew test
         # run tests  against the emulator.
         - ./gradlew connectedAndroidTest
+        post:
+            - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+            - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+            - find . -type f -regex ".*/build/connectedAndroidTest-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+            - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/app/build/outputs/apk/ $CIRCLE_ARTIFACTS
