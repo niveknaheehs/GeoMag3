@@ -26,10 +26,10 @@ test:
         - ./gradlew test
         - ./gradlew connectedAndroidTest
     pre:
-      - emulator -avd circleci-android24 -no-window:
-        background: true
-        parallel: true
-      - circle-android wait-for-boot
+        - emulator -avd circleci-android24 -no-window:
+          background: true
+          parallel: true
+        - circle-android wait-for-boot
 
     post:
         - mkdir -p $CIRCLE_TEST_REPORTS/junit/
