@@ -1,38 +1,23 @@
-#
-# Build configuration for Circle CI
-#
-
-#general:
-#    artifacts:
-#        - /home/ubuntu/Geomag3/app/build/outputs/apk/
+general:
+  artifacts:
+    - "~/build_output.zip" # Save APK's, Lint Results, and Test Results
 
 machine:
-    environment:
-        ANDROID_HOME: /usr/local/android-sdk-linux
-        QEMU_AUDIO_DRV: none
+  environment:
+    ANDROID_HOME: /usr/local/android-sdk-linux
 
 dependencies:
-    pre:
-        - echo y | android update sdk --no-ui --all --filter "android-24, build-tools-25.0.2"
-    override:
-        - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-19.1.0,android-19,extra-google-m2repository,extra-google-google_play_services,extra-android-support
-        - chmod +x gradlew
-        - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
-
+  override:
+    - source scripts/environmentSetup.sh && getAndroidSDK
 
 test:
-    override:
-        - (./gradlew assemble):
-            timeout: 360
-        - ./gradlew test
-        - ./gradlew connectedAndroidTest
-    pre:
-        - emulator -avd circleci-android24 -no-window:
-          background: true
-          parallel: true
-        - circle-android wait-for-boot
-
-    post:
-        - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-        - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-        - find . -type f -regex ".*/build/connectedAndroidTest-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+  pre:
+    - $ANDROID_HOME/tools/emulator -avd testAVD -no-skin -no-audio -no-window:
+        background: true
+    - ./gradlew assembleDebug:
+        timeout: 360
+    - source scripts/environmentSetup.sh && waitForAVD
+  override:
+    - ./gradlew connectedAndroidTest --info:
+        timeout: 360
+    - zip -r ~/build_output.zip app/build/outputs/
