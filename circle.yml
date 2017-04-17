@@ -20,16 +20,17 @@ dependencies:
         - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 
 test:
-  pre:
-    - emulator -avd circleci-android24 -no-window:
-        background: true
-        parallel: true
-    - circle-android wait-for-boot
     override:
         - (./gradlew assemble):
             timeout: 360
         - ./gradlew test
         - ./gradlew connectedAndroidTest
+    pre:
+      - emulator -avd circleci-android24 -no-window:
+        background: true
+        parallel: true
+      - circle-android wait-for-boot
+
     post:
         - mkdir -p $CIRCLE_TEST_REPORTS/junit/
         - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
