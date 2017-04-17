@@ -1,23 +1,27 @@
-general:
-  artifacts:
-    - "~/build_output.zip" # Save APK's, Lint Results, and Test Results
-
 machine:
-  environment:
-    ANDROID_HOME: /usr/local/android-sdk-linux
+    environment:
+        ANDROID_HOME: /home/ubuntu/android
 
 dependencies:
-  override:
-    - source scripts/environmentSetup.sh && getAndroidSDK
+    pre:
+        - echo y | android update sdk --no-ui --all --filter "platform-tools"
+        - echo y | android update sdk --no-ui --all --filter "android-23"
+        - echo y | android update sdk --no-ui --all --filter "build-tools-23.0.2"
 
 test:
-  pre:
-    - $ANDROID_HOME/tools/emulator -avd testAVD -no-skin -no-audio -no-window:
-        background: true
-    - ./gradlew assembleDebug:
-        timeout: 360
-    - source scripts/environmentSetup.sh && waitForAVD
-  override:
-    - ./gradlew connectedAndroidTest --info:
-        timeout: 360
-    - zip -r ~/build_output.zip app/build/outputs/
+    override:
+        # start the emulator
+        - emulator -avd circleci-android22 -no-audio -no-window:
+    background: true
+        # wait for it to have booted
+        - circle-android wait-for-boot
+        # unlock the emulator screen
+        - sleep 30
+        # run build
+        - ./gradlew assembleDebug
+        # run tests against the emulator.
+        - ./gradlew connectedAndroidTest -PdisablePreDex
+        # copy the build outputs to artifacts
+        - cp -r app/build/outputs $CIRCLE_ARTIFACTS
+        # copy the test results to the test results directory.
+        - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
