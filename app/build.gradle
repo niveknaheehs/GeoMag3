@@ -43,6 +43,10 @@ android {
         compile 'com.google.firebase:firebase-database:10.2.0'
         compile 'com.firebase:firebase-client-android:2.5.0'
         compile 'com.indooratlas.android:indooratlas-android-sdk:2.4.1@aar'
+        // required if you want to use Mockito for unit tests
+        testCompile 'org.mockito:mockito-core:2.7.22'
+        // required if you want to use Mockito for Android tests
+        androidTestCompile 'org.mockito:mockito-android:2.7.22'
     }
 
 }

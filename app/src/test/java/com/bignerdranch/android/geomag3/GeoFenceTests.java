@@ -27,11 +27,13 @@ public class GeoFenceTests {
     @Test
     public void InsideGeoFence() throws Exception {
 
-        assertEquals(1, 1);
+//        assertEquals(1, 1);
+
 //        GeoFence geoFence = new GeoFence();
 //
 //        // Set Current Location
-//        Location location;
+//        //Location location;
+//        Location location =  new Location("myProvider");
 //        location.setLatitude(TestLatitudeInside);
 //        location.setLongitude(TestLongditudeInside);
 //
@@ -40,9 +42,10 @@ public class GeoFenceTests {
 //
 //        // Test if we are inside the geofence
 //        int res = geoFence.insideGeoFence(location);
-//
-//        // The  test passes if we are in the geofence
-//        assertEquals(res, 1);
+
+        // The  test passes if we are in the geofence
+        //assertEquals(res, 1);
+        assertEquals(1, 1);
     }
 
     @Test
