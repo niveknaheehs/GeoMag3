@@ -18,12 +18,12 @@ test:
             parallel: true
         # wait for it to have booted
         - circle-android wait-for-boot
-        # run unit tests  against the emulator.
+        # run tests  against the emulator.
         - ./gradlew test
         # run tests  against the emulator.
         - ./gradlew connectedAndroidTest
-        post:
-            - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-            - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-            - find . -type f -regex ".*/build/connectedAndroidTest-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-            - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/app/build/outputs/apk/ $CIRCLE_ARTIFACTS
+    post:
+        - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+        - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+        - find . -type f -regex ".*/build/connectedAndroidTest-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+        - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/app/build/outputs/apk/ $CIRCLE_ARTIFACTS
