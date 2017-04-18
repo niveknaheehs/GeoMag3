@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,13 +31,21 @@ public class FirebaseTest {
 
     @Test
     public void TestFB() throws Exception {
+
+
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
+
+
 
         //Firebase.setAndroidContext(appContext);
         Firebase.setAndroidContext(appContext);
 
+
+
         mFirebaseRef =  new Firebase("https://geomag-fa9c7.firebaseio.com/Test");
+
+
 
         String timeStampStr ;
         Map<String,Object> values = new HashMap<>();
