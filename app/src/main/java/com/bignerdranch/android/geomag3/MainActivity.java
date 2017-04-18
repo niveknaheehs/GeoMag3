@@ -115,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
     private IALocationListener mIALocationListener = new IALocationListener() {
 
 
-
         // Called when the location has changed.
         @Override
         public void onLocationChanged(IALocation location) {

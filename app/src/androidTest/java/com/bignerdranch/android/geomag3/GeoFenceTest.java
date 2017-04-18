@@ -53,7 +53,7 @@ public class GeoFenceTest {
         location.setLongitude(TestLongditudeInside);
 
         // Set Point of interest
-        geoFence.setLocation(POILongditude,POILatitude);
+        geoFence.setPOILocation(POILongditude,POILatitude);
 
         // Test if we are inside the geofence
         int res = geoFence.insideGeoFence(location);
@@ -73,7 +73,7 @@ public class GeoFenceTest {
         location.setLongitude(TestLongditudeOutside);
 
         // Set Point of interest
-        geoFence.setLocation(POILongditude,POILatitude);
+        geoFence.setPOILocation(POILongditude,POILatitude);
 
         // Test if we are inside the geofence
         int res = geoFence.insideGeoFence(location);

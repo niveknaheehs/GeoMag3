@@ -51,7 +51,7 @@ public class FirebaseTest {
         location.setLongitude(TestLongditudeInside);
 
         // Set Point of interest
-        geoFence.setLocation(POILongditude,POILatitude);
+        geoFence.setPOILocation(POILongditude,POILatitude);
 
         // Test if we are inside the geofence
         int res = geoFence.insideGeoFence(location);
