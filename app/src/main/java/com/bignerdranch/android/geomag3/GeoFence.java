@@ -15,12 +15,12 @@ class GeoFence {
 
     private Location poi = new Location("myProvider");
 
-    public void setLocation(Double longditude,Double latidude ) {
+    public void setPOILocation(Double longditude,Double latidude ) {
         poi.setLongitude(longditude);
         poi.setLatitude(latidude);
     }
 
-    private double  getDistance(Location location) {
+    public double  getDistance(Location location) {
 
         return location.distanceTo(poi);
     }

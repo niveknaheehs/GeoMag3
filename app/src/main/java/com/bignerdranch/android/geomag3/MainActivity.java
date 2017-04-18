@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static double lastDistance;
     private static final  double POILatitude = 51.5225261374409;
-    private static final double  POILongditude = -0.13083979995587666;
+    private static final double  POILongitude = -0.13083979995587666;
 
     private IALocationManager mIALocationManager;
     private String status = "unknown";
@@ -92,17 +92,8 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions( this, neededPermissions, CODE_PERMISSIONS );
 
 
-//        mIALocationManager.requestLocationUpdates(IALocationRequest.create(), mIALocationListener);
-
-
     }
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//
-//        //Handle if any of the permissions are denied, in grantResults
-//    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -134,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
             timeStampStr = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
             values.put("timestamp", timeStampStr);
-            values.put("latitutde", location.getLatitude());//location.getLatitude());// ;);
-            values.put("longtitue",location.getLongitude());// location.getLatitude()); //location.getLongitude());
+            values.put("latitutde", location.getLatitude());
+            values.put("longtitue",location.getLongitude());
 
              TextView mTextViewLong = (TextView) findViewById(R.id.Long_label);//"@+id/longLab");
              String mStringLong = "Longditude: "+ String.valueOf(location.getLongitude());
@@ -149,7 +140,11 @@ public class MainActivity extends AppCompatActivity {
 
            GeoFence geoFence = new GeoFence();
 
-            geoFence.setLocation(location.getLongitude(),location.getLatitude());
+            geoFence.setPOILocation(POILongitude,POILatitude);
+
+            TextView mTextViewDist = (TextView) findViewById(R.id.Dist_label);
+            String mStringDist = "Distance: " + geoFence.getDistance(location.toLocation());
+            mTextViewDist.setText(mStringDist);
 
             if (geoFence.insideGeoFence(location.toLocation()) == TRUE && currentlyinsideGeoFence == FALSE) {
                 Toast.makeText(MainActivity.this, "Entering point of interest", Toast.LENGTH_LONG).show();
