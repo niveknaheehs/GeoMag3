@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
@@ -96,6 +97,9 @@ public class GeoFenceTest {
         Firebase.setAndroidContext(appContext);
 
         mFirebaseRef =  new Firebase("https://geomag-fa9c7.firebaseio.com/Test");
+
+
+        TimeUnit.SECONDS.sleep(3);
 
         String timeStampStr ;
         Map<String,Object> values = new HashMap<>();
