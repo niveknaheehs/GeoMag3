@@ -83,33 +83,33 @@ public class GeoMagTest {
         assertEquals(res, 0);
     }
 
-    @Test
-    public void TestFB() throws Exception {
-
-         Firebase mFirebaseRef;
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
-
-        //Firebase.setAndroidContext(appContext);
-        Firebase.setAndroidContext(appContext);
-
-        mFirebaseRef =  new Firebase("https://geomag-fa9c7.firebaseio.com/Test");
-
-
-        TimeUnit.SECONDS.sleep(3);
-
-        String timeStampStr ;
-        Map<String,Object> values = new HashMap<>();
-
-        timeStampStr = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-        values.put("timestamp", timeStampStr);
-        values.put("Test", 123456);
-
-        mFirebaseRef.push().setValue(values);
-
-        //The  test passes if we are in the geofence
-        assertEquals(1, 0);
-    }
+//    @Test
+//    public void TestFB() throws Exception {
+//
+//         Firebase mFirebaseRef;
+//        // Context of the app under test.
+//        Context appContext = InstrumentationRegistry.getTargetContext();
+//
+//        //Firebase.setAndroidContext(appContext);
+//        Firebase.setAndroidContext(appContext);
+//
+//        mFirebaseRef =  new Firebase("https://geomag-fa9c7.firebaseio.com/Test");
+//
+//
+//        TimeUnit.SECONDS.sleep(3);
+//
+//        String timeStampStr ;
+//        Map<String,Object> values = new HashMap<>();
+//
+//        timeStampStr = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+//        values.put("timestamp", timeStampStr);
+//        values.put("Test", 123456);
+//
+//        mFirebaseRef.push().setValue(values);
+//
+//        //The  test passes if we are in the geofence
+//        assertEquals(1, 0);
+//    }
 }
 
 
