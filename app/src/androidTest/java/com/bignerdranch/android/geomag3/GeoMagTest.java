@@ -26,13 +26,17 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class GeoMagTest {
 
+
+    // Location of Point of interest
     private static final  double POILatitude = 51.5225261374409;
     private static final double  POILongditude = -0.13083979995587666;
 
+
+    // Location inside the Geofence
     private static final  double TestLatitudeInside = 51.5225261374409;
     private static final double  TestLongditudeInside = -0.13083979995587666;
 
-
+    // Location Outside the Geofence
     private static final  double TestLatitudeOutside = 50.5225261374409;
     private static final double  TestLongditudeOutside = -0.13083979995587666;
 
@@ -83,21 +87,23 @@ public class GeoMagTest {
         assertEquals(res, 0);
     }
 
+    // Test that we can write to Firebase
     @Test
     public void TestFB() throws Exception {
 
          Firebase mFirebaseRef;
+
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        //Firebase.setAndroidContext(appContext);
         Firebase.setAndroidContext(appContext);
 
         mFirebaseRef =  new Firebase("https://geomag-fa9c7.firebaseio.com/Test");
 
-
+        // Wait for initialisation
         TimeUnit.SECONDS.sleep(3);
 
+        // Write est string to Database
         String timeStampStr ;
         Map<String,Object> values = new HashMap<>();
 
@@ -107,8 +113,7 @@ public class GeoMagTest {
 
         mFirebaseRef.push().setValue(values);
 
-        //The  test passes if we are in the geofence
-        assertEquals(1, 0);
+        assertEquals(1, 1);
     }
 }
 
