@@ -1,15 +1,14 @@
 package com.bignerdranch.android.geomag3;
 
 import android.content.Context;
+import android.location.Location;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.firebase.client.Firebase;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import android.location.Location;
-
-import com.firebase.client.Firebase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,15 +18,13 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * Instrumentation test, which will execute on an Android device.
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class GeoFenceTest {
+public class GeoMagTest {
 
     private static final  double POILatitude = 51.5225261374409;
     private static final double  POILongditude = -0.13083979995587666;
