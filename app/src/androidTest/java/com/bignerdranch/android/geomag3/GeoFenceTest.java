@@ -86,10 +86,10 @@ public class GeoFenceTest {
         assertEquals(res, 0);
     }
 
-    private Firebase mFirebaseRef;
     @Test
     public void TestFB() throws Exception {
 
+         Firebase mFirebaseRef;
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
