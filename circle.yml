@@ -1,6 +1,4 @@
-
-#Install android build tools, platforms
-#Supported versions here https://circleci.com/docs/android
+# Project dependencies
 dependencies:
     override:
         - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-23.0.1,android-23,extra-google-m2repository,extra-google-google_play_services,extra-android-support
@@ -8,21 +6,23 @@ dependencies:
         - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 
 #-PdisablePreDex is a must else gradle just dies due to memory limit
-#Replace
 test:
     override:
+        # Build Project
         - (./gradlew assemble -PdisablePreDex):
             timeout: 360
+        # Run emulator
         - emulator -avd circleci-android22 -no-audio -no-window:
             background: true
             parallel: true
-        # wait for it to have booted
+        # wait for emulator to have booted
         - circle-android wait-for-boot
         # run unit tests .
         # - ./gradlew test
         # run  instrumentation tests  against the emulator.
         - ./gradlew connectedAndroidTest
     post:
+        # Move the test and build artitacfacts to an accessible area
         - mkdir -p $CIRCLE_TEST_REPORTS/junit/
         - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
         - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/app/build/outputs/apk/ $CIRCLE_ARTIFACTS
