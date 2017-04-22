@@ -18,11 +18,11 @@ test:
             parallel: true
         # wait for it to have booted
         - circle-android wait-for-boot
-        # run tests  against the emulator.
+        # run unit tests .
         # - ./gradlew test
-        # run tests  against the emulator.
+        # run  instrumentation tests  against the emulator.
         - ./gradlew connectedAndroidTest
     post:
         - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-        - cp -r my-project/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
+        - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
         - cp -r ${HOME}/${CIRCLE_PROJECT_REPONAME}/app/build/outputs/apk/ $CIRCLE_ARTIFACTS
