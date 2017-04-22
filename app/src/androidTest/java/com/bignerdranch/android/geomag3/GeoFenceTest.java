@@ -31,14 +31,6 @@ public class GeoFenceTest {
     private static final double  TestLongditudeOutside = -0.13083979995587666;
 
     @Test
-    public void useAppContext() throws Exception {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
-
-        assertEquals("com.bignerdranch.android.geomag3", appContext.getPackageName());
-    }
-
-    @Test
     public void InsideGeoFence() throws Exception {
 
         // Context of the app under test.
@@ -64,6 +56,9 @@ public class GeoFenceTest {
 
     @Test
     public void OutsideGeoFence() throws Exception {
+
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
 
         GeoFence geoFence = new GeoFence();
 

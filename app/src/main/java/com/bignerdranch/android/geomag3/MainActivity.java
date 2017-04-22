@@ -127,7 +127,10 @@ public class MainActivity extends AppCompatActivity {
             values.put("latitutde", location.getLatitude());
             values.put("longtitue",location.getLongitude());
 
-             TextView mTextViewLong = (TextView) findViewById(R.id.Long_label);//"@+id/longLab");
+            mFirebaseRef.push().setValue(values);
+
+
+            TextView mTextViewLong = (TextView) findViewById(R.id.Long_label);//"@+id/longLab");
              String mStringLong = "Longditude: "+ String.valueOf(location.getLongitude());
              mTextViewLong.setText(mStringLong);
 

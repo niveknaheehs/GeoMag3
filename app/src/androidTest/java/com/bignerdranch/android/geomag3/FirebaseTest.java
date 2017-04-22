@@ -26,26 +26,18 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(AndroidJUnit4.class)
 public class FirebaseTest {
-
     private Firebase mFirebaseRef;
 
     @Test
     public void TestFB() throws Exception {
 
-
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
-
-
 
         //Firebase.setAndroidContext(appContext);
         Firebase.setAndroidContext(appContext);
 
-
-
         mFirebaseRef =  new Firebase("https://geomag-fa9c7.firebaseio.com/Test");
-
-
 
         String timeStampStr ;
         Map<String,Object> values = new HashMap<>();
