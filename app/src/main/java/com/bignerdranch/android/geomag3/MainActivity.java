@@ -1,31 +1,24 @@
 package com.bignerdranch.android.geomag3;
 
-import android.app.AlertDialog;
+
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.firebase.client.Firebase;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
 import com.indooratlas.android.sdk.IALocation;
 import com.indooratlas.android.sdk.IALocationListener;
 import com.indooratlas.android.sdk.IALocationManager;
 import com.indooratlas.android.sdk.IALocationRequest;
-import com.indooratlas.android.sdk.resources.IALocationListenerSupport;
-
-import com.bignerdranch.android.geomag3.GeoFence;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,14 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private Firebase mFirebaseRef;
     private static final String TAG = "MainActivity";
     private final int CODE_PERMISSIONS = 100;
-    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 101;
-    private static final int REQUEST_CODE_ACCESS_COARSE_LOCATION = 102;
-    private static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 103;
-    private static final int REQUEST_CODE_ACCESS_WIFI_STATE = 104;
-    private static final int REQUEST_CODE_CHANGE_WIFI_STATE = 105;
-    private static final int REQUEST_CODE_ACCESS_LOCATION_EXTRA_COMMANDS = 106;
 
     private static double lastDistance;
+
+    // Point of interest Longditude and latitude
     private static final  double POILatitude = 51.5225261374409;
     private static final double  POILongitude = -0.13083979995587666;
 
@@ -52,28 +41,73 @@ public class MainActivity extends AppCompatActivity {
     private int currentlyinsideGeoFence;
 
 
+    public void RecordLocation(IALocation location) {
+
+
+        // Setup a timestamp
+        String timeStampStr ;
+        Map<String,Object> values = new HashMap<>();
+        timeStampStr = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+
+        // Write timestamp/latitude/longitude to firebase
+        values.put("timestamp", timeStampStr);
+        values.put("latitutde", location.getLatitude());
+        values.put("longtitue",location.getLongitude());
+
+        mFirebaseRef.push().setValue(values);
+
+
+        // Change the Longitude on the display
+        TextView mTextViewLong = (TextView) findViewById(R.id.Long_label);//"@+id/longLab");
+        String mStringLong = "Longditude: "+ String.valueOf(location.getLongitude());
+        mTextViewLong.setText(mStringLong);
+
+        // Change the Latitude on the display
+        TextView mTextViewLat = (TextView) findViewById(R.id.Lat_label);//"@+id/longLab");
+        String mStringLat = "Latitude: " + String.valueOf(location.getLatitude());
+        mTextViewLat.setText(mStringLat);
+
+
+        // Determine the distance to the Geofence and determine if Inside or outside of the Geofence
+
+        GeoFence geoFence = new GeoFence();
+
+        geoFence.setPOILocation(POILongitude,POILatitude);
+
+
+        // Display the Distance to the Point Of interest
+        TextView mTextViewDist = (TextView) findViewById(R.id.Dist_label);
+        String mStringDist = "Distance: " + geoFence.getDistance(location.toLocation());
+        mTextViewDist.setText(mStringDist);
+
+
+        // Make toast when leaving or entering the GeoFence
+        if (geoFence.insideGeoFence(location.toLocation()) == TRUE && currentlyinsideGeoFence == FALSE) {
+            Toast.makeText(MainActivity.this, "Entering point of interest", Toast.LENGTH_LONG).show();
+        }
+        else if (geoFence.insideGeoFence(location.toLocation()) == FALSE && currentlyinsideGeoFence == TRUE) {
+            Toast.makeText(MainActivity.this, "Leaving point of interest", Toast.LENGTH_LONG).show();
+        }
+
+        // Store the Geofence in/out status for the next location change
+        currentlyinsideGeoFence = geoFence.insideGeoFence(location.toLocation());
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Create the Location manager Object to access Indoor Atlas Services
         mIALocationManager = IALocationManager.create(this);
 
+        // Create the firebase Object to access firebase
         Firebase.setAndroidContext(this);
         mFirebaseRef =  new Firebase("https://geomag-fa9c7.firebaseio.com/Paths");
 
-        String timeStampStr ;
-        Map<String,Object> values = new HashMap<>();
 
-        timeStampStr = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-        values.put("timestamp", timeStampStr);
-        values.put("latitutde", 0);
-        values.put("longtitue",0);
-
-        mFirebaseRef.push().setValue(values);
-
-
+        // Ensure that the required permissions are in place
         String[] neededPermissions = {
                 android.Manifest.permission.CHANGE_WIFI_STATE,
                 android.Manifest.permission.ACCESS_WIFI_STATE,
@@ -85,11 +119,12 @@ public class MainActivity extends AppCompatActivity {
                 android.Manifest.permission.BLUETOOTH_ADMIN,
                 android.Manifest.permission.INTERNET,
                 android.Manifest.permission.ACCESS_NETWORK_STATE,
-                android.Manifest.permission.INSTALL_LOCATION_PROVIDER,
-                android.Manifest.permission.CONTROL_LOCATION_UPDATES
+                android.Manifest.permission.INSTALL_LOCATION_PROVIDER
         };
 
+        // Request the required permissions
         ActivityCompat.requestPermissions( this, neededPermissions, CODE_PERMISSIONS );
+
 
 
     }
@@ -99,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        // Process the permission request results & show toasts for the outcomes
         for(int i=0; i< grantResults.length; i++){
             if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
 
@@ -114,52 +150,17 @@ public class MainActivity extends AppCompatActivity {
 
     private IALocationListener mIALocationListener = new IALocationListener() {
 
-
         // Called when the location has changed.
         @Override
         public void onLocationChanged(IALocation location) {
 
-            String timeStampStr ;
-            Map<String,Object> values = new HashMap<>();
-            timeStampStr = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+            RecordLocation(location);
 
-            values.put("timestamp", timeStampStr);
-            values.put("latitutde", location.getLatitude());
-            values.put("longtitue",location.getLongitude());
-
-            mFirebaseRef.push().setValue(values);
-
-
-            TextView mTextViewLong = (TextView) findViewById(R.id.Long_label);//"@+id/longLab");
-             String mStringLong = "Longditude: "+ String.valueOf(location.getLongitude());
-             mTextViewLong.setText(mStringLong);
-
-
-            TextView mTextViewLat = (TextView) findViewById(R.id.Lat_label);//"@+id/longLab");
-            String mStringLat = "Latitude: " + String.valueOf(location.getLatitude());
-            mTextViewLat.setText(mStringLat);
-
-
-           GeoFence geoFence = new GeoFence();
-
-            geoFence.setPOILocation(POILongitude,POILatitude);
-
-            TextView mTextViewDist = (TextView) findViewById(R.id.Dist_label);
-            String mStringDist = "Distance: " + geoFence.getDistance(location.toLocation());
-            mTextViewDist.setText(mStringDist);
-
-            if (geoFence.insideGeoFence(location.toLocation()) == TRUE && currentlyinsideGeoFence == FALSE) {
-                Toast.makeText(MainActivity.this, "Entering point of interest", Toast.LENGTH_LONG).show();
-            }
-            else if (geoFence.insideGeoFence(location.toLocation()) == FALSE && currentlyinsideGeoFence == TRUE) {
-                Toast.makeText(MainActivity.this, "Leaving point of interest", Toast.LENGTH_LONG).show();
-            }
-            currentlyinsideGeoFence = geoFence.insideGeoFence(location.toLocation());
         }
 
         @Override
         public void onStatusChanged(String provider, int stat, Bundle extras) {
-
+            // Display the Calibration and Status Changes
             switch (stat) {
                 case IALocationManager.STATUS_CALIBRATION_CHANGED:
 
@@ -193,10 +194,10 @@ public class MainActivity extends AppCompatActivity {
             String mStringCal = "Calibration: " + quality;
             String mStringStat = "Status: " + status;
 
-            TextView mTextViewCal = (TextView) findViewById(R.id.Cal_label);//"@+id/longLab");
+            TextView mTextViewCal = (TextView) findViewById(R.id.Cal_label);
             mTextViewCal.setText(mStringCal);
 
-            TextView mTextViewStat= (TextView) findViewById(R.id.Stat_label);//"@+id/longLab");
+            TextView mTextViewStat= (TextView) findViewById(R.id.Stat_label);
             mTextViewStat.setText(mStringStat);
 
         }
@@ -206,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Initiate the request for Location Update notifications
         mIALocationManager.requestLocationUpdates(IALocationRequest.create(), mIALocationListener);
 
     }
@@ -213,10 +215,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        // Stop Location Update notifications
         mIALocationManager.removeLocationUpdates(mIALocationListener);
     }
     @Override
     protected void onDestroy() {
+        // Destroy the Location Manager Object - housekeeping
         mIALocationManager.destroy();
         super.onDestroy();
     }
