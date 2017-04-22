@@ -108,7 +108,7 @@ public class GeoMagTest {
         mFirebaseRef.push().setValue(values);
 
         //The  test passes if we are in the geofence
-        assertEquals(1, 1);
+        assertEquals(1, 0);
     }
 }
 
