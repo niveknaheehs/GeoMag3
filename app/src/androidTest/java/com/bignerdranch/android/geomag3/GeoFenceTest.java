@@ -8,6 +8,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.location.Location;
+
+import com.firebase.client.Firebase;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 
 import static org.junit.Assert.assertEquals;
@@ -75,6 +83,31 @@ public class GeoFenceTest {
 
         // The  test passes if we are not in the geofence
         assertEquals(res, 0);
+    }
+
+    private Firebase mFirebaseRef;
+    @Test
+    public void TestFB() throws Exception {
+
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+
+        //Firebase.setAndroidContext(appContext);
+        Firebase.setAndroidContext(appContext);
+
+        mFirebaseRef =  new Firebase("https://geomag-fa9c7.firebaseio.com/Test");
+
+        String timeStampStr ;
+        Map<String,Object> values = new HashMap<>();
+
+        timeStampStr = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+        values.put("timestamp", timeStampStr);
+        values.put("Test", 123456);
+
+        mFirebaseRef.push().setValue(values);
+
+        //The  test passes if we are in the geofence
+        assertEquals(1, 1);
     }
 }
 
